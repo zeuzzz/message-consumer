@@ -4,6 +4,7 @@ import lombok.Setter;
 import pl.karnecki.dao.MessageDao;
 import pl.karnecki.model.Message;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -20,7 +21,7 @@ public class MessageEndpoint {
     @Path("message")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_HTML)
-    public void handleMessage(Message message) {
+    public void handleMessage(@Valid Message message) {
         messageDao.insert(message);
     }
 }
