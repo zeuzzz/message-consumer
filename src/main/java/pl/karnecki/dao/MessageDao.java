@@ -1,6 +1,7 @@
 package pl.karnecki.dao;
 
 import lombok.Setter;
+import lombok.SneakyThrows;
 import pl.karnecki.model.Message;
 
 import javax.sql.DataSource;
@@ -15,19 +16,19 @@ import java.text.SimpleDateFormat;
 public class MessageDao {
 
     private DataSource dataSource;
+    public static final String INSERT = "INSERT INTO message(" +
+            " user_id, currency_from, currency_to, amount_sell, amount_buy, " +
+            " rate, time_placed, originating_country) " +
+            "VALUES(?,?,?,?,?,?,?,?)";
 
+    @SneakyThrows(ParseException.class)
     public void insert(Message message) {
-        String sql = "INSERT INTO message(" +
-                " user_id, currency_from, currency_to, amount_sell, amount_buy, " +
-                " rate, time_placed, originating_country) " +
-                "VALUES(?,?,?,?,?,?,?,?)";
         Connection conn = null;
         try {
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yy hh:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Message.DATE_FORMAT);
 
             conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(INSERT);
             ps.setInt(1, message.getUserId());
             ps.setString(2, message.getCurrencyFrom());
             ps.setString(3, message.getCurrencyTo());
@@ -41,9 +42,6 @@ public class MessageDao {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
         } finally {
             if (conn != null) {
                 try {

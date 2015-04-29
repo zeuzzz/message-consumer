@@ -2,20 +2,16 @@ package pl.karnecki.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import pl.karnecki.validator.DateFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-
-/*
-{"userId": "134256", "currencyFrom": "EUR", "currencyTo": "GBP", "amountSell": 1000,
-"amountBuy": 747.10, "rate": 0.7471, "timePlaced" :
-"24-JAN-15 10:27:44", "originatingCountry" : "FR"}
- */
-
 @Data
 @EqualsAndHashCode
 public class Message {
+
+    public static final String DATE_FORMAT = "dd-MMM-yy hh:mm:ss";
     @NotNull
     private Integer userId;
     @NotNull
@@ -29,6 +25,7 @@ public class Message {
     @NotNull
     private Float rate;
     @NotNull
+    @DateFormat(message = "Incorrect date format. Expecting " + DATE_FORMAT)
     private String timePlaced;
     @NotNull
     private String originatingCountry;
